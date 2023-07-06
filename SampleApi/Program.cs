@@ -29,8 +29,8 @@ builder.Services.AddScoped<IContext>(s => context);
 //builder.Services.AddTransient<IContext>(s => context);
 
 string cnstr= builder.Configuration.GetConnectionString("Dev");
-builder.Services.AddScoped<IRepository<StudentPOCO>, StudentRepository>(s=> new StudentRepository(cnstr));
-builder.Services.AddScoped<IRepository<SectionPOCO>, SectionRepository>(s => new SectionRepository(cnstr));
+builder.Services.AddScoped<IRepository<StudentPOCO,int>, StudentRepository>(s=> new StudentRepository(cnstr));
+builder.Services.AddScoped<IRepository<SectionPOCO, int>, SectionRepository>(s => new SectionRepository(cnstr));
 
 
 

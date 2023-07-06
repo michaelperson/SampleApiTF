@@ -8,13 +8,44 @@ using System.Threading.Tasks;
 
 namespace SampleApi.Repositories
 {
-	public class SectionRepository : IRepository<SectionPOCO>
+	public class SectionRepository : IRepository<SectionPOCO, int>
 	{
 		private string _cnstr;
 
 		public SectionRepository(string cnstr)
 		{
 			_cnstr = cnstr;
+		}
+
+		public int Add(SectionPOCO obj)
+		{
+			int id;
+			try
+			{
+				using (SqlConnection conn = new SqlConnection(_cnstr))
+				{
+					conn.Open();
+					using (SqlCommand cmd = conn.CreateCommand())
+					{
+						cmd.CommandText = "INSERT INTO Section OUTPUT inserted.section_id VALUES ( @section_id, @sectionname, @delegateid)";
+
+						cmd.Parameters.Add("@section_id", System.Data.SqlDbType.VarChar).Value = obj.Section_Id;
+						 
+						cmd.Parameters.AddWithValue("sectionname", obj.Section_Name);
+						cmd.Parameters.AddWithValue("delegateid", obj.Delegate_id);
+						 
+
+						id = (int)cmd.ExecuteScalar();
+					}
+					conn.Close();
+					return id;
+				}
+			}
+			catch (Exception ex)
+			{
+				//TODO : manage exception
+				throw;
+			}
 		}
 
 		public void Delete(int id)
@@ -79,7 +110,31 @@ namespace SampleApi.Repositories
 
 		public void Update(SectionPOCO obj)
 		{
-			throw new NotImplementedException();
+			using (SqlConnection oCon = new SqlConnection(_cnstr))
+			{
+				try
+				{
+					oCon.Open();
+					using (SqlCommand oCmd = oCon.CreateCommand())
+					{
+						string query = "UPDATE SECTION SET section_name=@sectionname, " +
+							"delegate_id=@delegateid WHERE section_id=@sectionid";
+						oCmd.CommandText = query;
+
+						oCmd.Parameters.AddWithValue("sectionid", obj.Section_Id); oCmd.Parameters.AddWithValue("delegateid", obj.Delegate_id); oCmd.Parameters.AddWithValue("sectionname", obj.Section_Name);
+					 
+						oCmd.ExecuteNonQuery();	
+
+
+					}
+					oCon.Close();	
+				}
+				catch (Exception)
+				{
+
+					throw;
+				}
+			}
 		}
 	}
 }

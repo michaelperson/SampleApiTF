@@ -13,8 +13,8 @@ namespace SampleApi.Controllers
 	public class SectionController : ControllerBase
 	{
 		private IContext _ctx;
-		private IRepository<SectionPOCO> _sectionRepo;
-		public SectionController(IContext context, IRepository<SectionPOCO> sec)
+		private IRepository<SectionPOCO, int> _sectionRepo;
+		public SectionController(IContext context, IRepository<SectionPOCO,int> sec)
 		{
 			_ctx = context;
 			_sectionRepo= sec;
@@ -75,19 +75,49 @@ namespace SampleApi.Controllers
 		}
 
 		[HttpPost]	 
-		public IActionResult CreateSection([FromBody]Section sec)
+		public IActionResult CreateSection([FromBody]SectionDTO sec)
 		{
 
 			try
 			{
-				_ctx.Sections.Add(sec);
-				return new CreatedResult($"https://localhost:7025/api/Section/{sec.Section_ID}", sec);
+				SectionPOCO loco = new SectionPOCO();
+				loco.Section_Name = sec.Section_Name;
+				loco.Section_Id= sec.Section_Id;
+				loco.Delegate_id= sec.Delegate_id;
+
+				int id = _sectionRepo.Add(loco);
+				return new CreatedResult($"https://localhost:7025/api/Section/{id}", sec);
 				 
 			}
 			catch (Exception ex)
 			{
 
 				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPut] 
+		public IActionResult UpdateSection (int section_id, [FromBody]SectionUpDTO upSection)
+		{
+			try
+			{
+				SectionPOCO exSec = _sectionRepo.Get(section_id);
+				if (exSec != null)
+				{
+					 	exSec.Section_Name=			  upSection.Section_Name;
+					exSec.Delegate_id= upSection.Delegate_id;
+
+					_sectionRepo.Update(exSec);
+					return Ok(exSec);
+				}
+				else
+				{
+					return NotFound(section_id);
+				}
+			}
+			catch (Exception)
+			{
+				return NotFound(section_id);
 			}
 		}
 	}

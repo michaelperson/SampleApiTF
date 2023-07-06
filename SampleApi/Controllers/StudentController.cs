@@ -13,8 +13,8 @@ namespace SampleApi.Controllers
 	public class StudentController : ControllerBase
 	{
 		private IContext _ctx;
-		private IRepository<StudentPOCO> repo;
-		public StudentController(IContext context, IRepository<StudentPOCO> repost)
+		private IRepository<StudentPOCO,int> repo;
+		public StudentController(IContext context, IRepository<StudentPOCO,int> repost)
 		{
 			_ctx = context;
 			repo = repost;
@@ -72,6 +72,33 @@ namespace SampleApi.Controllers
 			return Ok(_ctx.Students.SingleOrDefault(s => s.Last_Name == name));
 		}
 
+		[HttpPost]
+		public IActionResult PostStudent( StudentCreateDTO student) 
+		{
+			try
+			{
+				StudentPOCO studentPOCO = new StudentPOCO()
+				{
+					Section_ID = student.Section_ID,
+					First_Name = student.First_Name,
+					BirthDate = student.BirthDate,
+					Login = student.Login,
+					Course_ID = student.Course_ID,
+					Last_Name = student.Last_Name,
+					Year_Result = student.Year_Result,
+					
+					
 
+				} ;
+
+				int studentId = repo.Add(studentPOCO);
+
+				return new CreatedResult($"https://localhost:7025/api/Student/{studentId}", studentPOCO);
+			}
+			catch (Exception)
+			{
+				return BadRequest(student);
+			}
+		}
 	}
 }

@@ -8,12 +8,45 @@ using System.Threading.Tasks;
 
 namespace SampleApi.Repositories
 {
-	public class StudentRepository : IRepository<StudentPOCO>
+	public class StudentRepository : IRepository<StudentPOCO,int>
 	{
 		private string _cnstr;
 		public StudentRepository(string cnstr)
 		{
 			_cnstr = cnstr;
+		}
+
+		public int Add(StudentPOCO obj)
+		{
+			int id;
+			try
+			{
+				using (SqlConnection conn = new SqlConnection(_cnstr))
+				{
+					conn.Open();
+					using (SqlCommand cmd = conn.CreateCommand())
+					{
+						cmd.CommandText = "INSERT INTO STUDENT OUTPUT inserted.student_id VALUES ( @firstname, @lastname, @birthdate, @login, @sectionid, @yearresult, @courseid)";
+
+						cmd.Parameters.Add("@firstname", System.Data.SqlDbType.VarChar).Value = obj.First_Name;
+						cmd.Parameters.AddWithValue("lastname", obj.Last_Name);
+						cmd.Parameters.AddWithValue("birthdate", obj.BirthDate);
+						cmd.Parameters.AddWithValue("login", obj.Login);
+						cmd.Parameters.AddWithValue("sectionid", obj.Section_ID);
+						cmd.Parameters.AddWithValue("yearresult", obj.Year_Result);
+						cmd.Parameters.AddWithValue("courseid", obj.Course_ID);
+
+					 id=(int)cmd.ExecuteScalar();
+					}
+					conn.Close();
+					return id;
+				}
+			}
+			catch (Exception ex)
+			{
+				//TODO : manage exception
+				throw;
+			}
 		}
 
 		public void Delete(int id)
