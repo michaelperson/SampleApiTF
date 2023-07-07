@@ -31,6 +31,8 @@ builder.Services.AddScoped<IContext>(s => context);
 string cnstr= builder.Configuration.GetConnectionString("Dev");
 builder.Services.AddScoped<IRepository<StudentPOCO,int>, StudentRepository>(s=> new StudentRepository(cnstr));
 builder.Services.AddScoped<IRepository<SectionPOCO, int>, SectionRepository>(s => new SectionRepository(cnstr));
+builder.Services.AddScoped<IRepository<ProfessorPOCO, int>, ProfessorRepository>(s => new ProfessorRepository(cnstr));
+builder.Services.AddScoped<IRepository<CoursePOCO, string>, CoursRepository>(s => new CoursRepository(cnstr));
 
 
 

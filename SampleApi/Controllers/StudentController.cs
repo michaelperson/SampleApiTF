@@ -21,6 +21,7 @@ namespace SampleApi.Controllers
 		}
 
 		[HttpGet]
+	
 		public IActionResult GetAllStudent()
 		{
 			 

@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApi.Models", "SampleA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exo_Linq_Context", "Exo_Linq_Context\Exo_Linq_Context.csproj", "{DAFC6EAC-8AE0-43DE-88C7-6BAB3A9EE101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApi.Entities", "SampleApi.Entities\SampleApi.Entities.csproj", "{33A6CC33-927E-49A6-8FB3-0D9428DE309E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApi.Entities", "SampleApi.Entities\SampleApi.Entities.csproj", "{33A6CC33-927E-49A6-8FB3-0D9428DE309E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApi.Repositories", "SampleApi.Repositories\SampleApi.Repositories.csproj", "{2D4F2B73-F371-4672-861E-89D10BE94DE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApi.Repositories", "SampleApi.Repositories\SampleApi.Repositories.csproj", "{2D4F2B73-F371-4672-861E-89D10BE94DE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
