@@ -25,7 +25,7 @@ namespace SampleApi.Controllers
 		public IActionResult GetAllStudent()
 		{
 			 
-			return Ok(_ctx.Students);
+			return Ok(repo.GetAll());
 		}
 
 		[HttpGet]

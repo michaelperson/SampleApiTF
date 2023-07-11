@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using SampleApi.EF;
 using SampleApi.Entities;
 using System;
 using System.Collections.Generic;
@@ -57,86 +58,33 @@ namespace SampleApi.Repositories
 		public StudentPOCO Get(int id)
 		{
 			StudentPOCO monRetour = new StudentPOCO();
-			 
-			
-			using (SqlConnection oConn = new SqlConnection(_cnstr))
-			{
-				try
-				{
-					/*1- Connect */
-					oConn.Open();
-					//2- je prépare ma requête
-					using (SqlCommand ocmd = oConn.CreateCommand())
-					{
-						//3 -  je récupère les données
-						string requete = "Select * FROM Student WHERE student_id = @id";
-						ocmd.CommandText = requete;
-						//SqlParameter monId = new SqlParameter();
-						//monId.Value = id;
-						//monId.SqlDbType = System.Data.SqlDbType.Int;
-						//monId.ParameterName= "id";
-						//ocmd.Parameters.Add(monId);
-						ocmd.Parameters.AddWithValue("id", id);
+			DbSlideContext ctx = new DbSlideContext();
 
-						SqlDataReader oDr = ocmd.ExecuteReader();
-						if (oDr.Read())
-						{
-
-							//4 -  je mets les données dans mon object
-							//Mapping
-							monRetour.Student_ID = (int)oDr["student_id"];
-							if (oDr["first_name"] != DBNull.Value)
-							{
-								monRetour.First_Name = oDr["first_name"].ToString();
-							}
-							if (oDr["last_name"] != DBNull.Value)
-							{
-								monRetour.Last_Name = oDr["last_name"].ToString();
-							}
-							if (oDr["course_id"] != DBNull.Value)
-							{
-								monRetour.Course_ID = oDr["course_id"].ToString();
-
-							}
-							if (oDr["Section_ID"] != DBNull.Value)
-							{
-								monRetour.Section_ID = (int)oDr["Section_ID"];
-
-							}
-							if (oDr["birth_date"] != DBNull.Value)
-							{
-								monRetour.BirthDate = (DateTime)oDr["birth_date"];
-							}
-							if (oDr["Login"] != DBNull.Value)
-							{
-								monRetour.Login = oDr["Login"].ToString();
-							}
-							if (oDr["year_result"] != DBNull.Value)
-							{
-								monRetour.Year_Result = (int)oDr["year_result"];
-
-							}
-						}
-						 
-						oDr.Close();
-						
-					}
-					
-						oConn.Close();
-					return monRetour;
-				}
-				catch (Exception)
-				{
-
-					throw;
-				}
-			}
-			//5 je retourne l'objet 
+			monRetour = Map(ctx.Students.FirstOrDefault(x => x.StudentId == id));
+		    return monRetour;
+				 
 		}
 
 		public IEnumerable<StudentPOCO> GetAll()
 		{
-			throw new NotImplementedException();
+			DbSlideContext ctx = new DbSlideContext();
+
+			return ctx.Students.Select(E=> StudentRepository.Map(E));
+		}
+
+		private static StudentPOCO Map(Student e)
+		{
+			return new StudentPOCO()
+			{
+				BirthDate = e.BirthDate.HasValue?e.BirthDate.Value:DateTime.MinValue,
+				Course_ID = e.CourseId,
+				First_Name = e.FirstName,
+				Last_Name = e.LastName,
+				Section_ID = e.SectionId.HasValue? e.SectionId.Value:0,
+				Student_ID = e.StudentId,
+				Year_Result = e.YearResult.HasValue?e.YearResult.Value:0
+
+			};
 		}
 
 		public void Update(StudentPOCO obj)

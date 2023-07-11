@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SampleApi.EF\SampleApi.EF.csproj" />
     <ProjectReference Include="..\SampleApi.Entities\SampleApi.Entities.csproj" />
   </ItemGroup>
 
